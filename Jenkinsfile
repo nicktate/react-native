@@ -120,31 +120,39 @@ def runStages() {
             }
 
             stage('Tests JS') {
-                parallel(
-                    'javascript flow': {
-                        runCmdOnDockerImage(jsImageName, 'yarn run flow -- check', '--rm')
-                    },
-                    'javascript tests': {
-                        runCmdOnDockerImage(jsImageName, 'yarn test --maxWorkers=4', '--rm')
-                    },
-                    'documentation tests': {
-                        runCmdOnDockerImage(jsImageName, 'cd website && yarn test', '--rm')
-                    },
-                    'documentation generation': {
-                        runCmdOnDockerImage(jsImageName, 'cd website && node ./server/generate.js', '--rm')
-                    }
-                )
+                try {
+                    parallel(
+                        'javascript flow': {
+                            runCmdOnDockerImage(jsImageName, 'yarn run flow -- check', '--rm')
+                        },
+                        'javascript tests': {
+                            runCmdOnDockerImage(jsImageName, 'yarn test --maxWorkers=4', '--rm')
+                        },
+                        'documentation tests': {
+                            runCmdOnDockerImage(jsImageName, 'cd website && yarn test', '--rm')
+                        },
+                        'documentation generation': {
+                            runCmdOnDockerImage(jsImageName, 'cd website && node ./server/generate.js', '--rm')
+                        }
+                    )
+                } catch(err) {
+                    currentBuild.result = "FAILED"
+                }
             }
 
             stage('Tests Android') {
-                parallel(
-                    'android unit tests': {
-                        runCmdOnDockerImage(androidImageName, 'bash /app/ContainerShip/scripts/run-android-docker-unit-tests.sh', '--privileged --rm')
-                    },
-                    'android e2e tests': {
-                        runCmdOnDockerImage(androidImageName, 'bash /app/ContainerShip/scripts/run-ci-e2e-tests.sh --android --js', '--rm')
-                    }
-                )
+                try {
+                    parallel(
+                        'android unit tests': {
+                            runCmdOnDockerImage(androidImageName, 'bash /app/ContainerShip/scripts/run-android-docker-unit-tests.sh', '--privileged --rm')
+                        },
+                        'android e2e tests': {
+                            runCmdOnDockerImage(androidImageName, 'bash /app/ContainerShip/scripts/run-ci-e2e-tests.sh --android --js', '--rm')
+                        }
+                    )
+                } catch(err) {
+                    currentBuild.result = "FAILED"
+                }
             }
 
             stage('Tests Android Instrumentation') {
