@@ -12,6 +12,11 @@ ADD ReactAndroid /app/ReactAndroid
 ADD ReactCommon /app/ReactCommon
 ADD keystores /app/keystores
 
+# Build the latest version of buck
+RUN rm -rf /opt/buck && git clone https://github.com/facebook/buck.git /opt/buck
+WORKDIR /opt/buck
+RUN ant
+
 # set workdir
 WORKDIR /app
 
