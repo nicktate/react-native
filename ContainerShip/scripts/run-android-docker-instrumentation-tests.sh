@@ -32,3 +32,4 @@ buck install ReactAndroid/src/androidTest/buck-runner:instrumentation-tests --co
 
 # run installed apk with tests
 node ./ContainerShip/scripts/run-android-ci-instrumentation-tests.js $*
+exit $?

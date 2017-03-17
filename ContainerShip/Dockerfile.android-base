@@ -2,7 +2,7 @@ FROM library/ubuntu:16.04
 
 # set default build arguments
 ARG ANDROID_VERSION=25.2.3
-ARG BUCK_VERSION=2016.11.11.01
+ARG BUCK_VERSION=f3452a6a7ab15a60e94c962e686293acbe677473
 ARG NDK_VERSION=10e
 ARG NODE_VERSION=6.2.0
 ARG WATCHMAN_VERSION=4.7.0
@@ -30,7 +30,7 @@ RUN n $NODE_VERSION
 # download buck
 RUN git clone https://github.com/facebook/buck.git /opt/buck
 WORKDIR /opt/buck
-RUN git checkout v$BUCK_VERSION
+RUN git checkout $BUCK_VERSION
 
 # build buck
 RUN ant
