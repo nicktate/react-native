@@ -112,7 +112,7 @@ return async.mapSeries(testClasses, (clazz, callback) => {
     print_test_suite_results(results);
 
     const failures = results.filter((test) => {
-        test.status === 'failure';
+        return test.status === 'failure';
     });
 
     return failures.length === 0 ? process.exit(0) : process.exit(1);
